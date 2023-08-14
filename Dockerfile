@@ -33,19 +33,6 @@ RUN apt-get install -y --no-install-recommends python3-pip=20.3.4-4
 RUN pip3 install --no-cache-dir setuptools==60.8.2
 RUN pip3 install --no-cache-dir azure-cli==${AZURE_CLI_VERSION}
 
-# Build final image
-FROM debian:${DEBIAN_VERSION}
-LABEL maintainer="bgauduch@github"
-ARG PYTHON_MAJOR_VERSION
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
-    ca-certificates=20210119 \
-    git=1:2.30.2-1 \
-    python3=${PYTHON_MAJOR_VERSION}.2-3 \
-    python3-distutils=${PYTHON_MAJOR_VERSION}.2-1 \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* \
-  && update-alternatives --install /usr/bin/python python /usr/bin/python${PYTHON_MAJOR_VERSION} 1
 WORKDIR /workspace
 COPY --from=terraform-cli /workspace/terraform /usr/local/bin/terraform
 COPY --from=azure-cli /usr/local/bin/az* /usr/local/bin/
